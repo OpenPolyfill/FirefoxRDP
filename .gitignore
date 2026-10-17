@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.test-dist/
+*.tgz
+
+/dist/
+
+
+# SVOCS website output + dependencies (website source is commit-worthy)
+/website/node_modules/
+/website/.svelte-kit/
+/website/build/
+/website/.vite/
+/website/.svocs-cache/
+/website/content/

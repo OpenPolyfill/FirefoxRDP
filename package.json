@@ -1,0 +1,61 @@
+{
+  "name": "@openpolyfill/firefox-rdp",
+  "version": "0.5.2",
+  "private": false,
+  "description": "TypeScript client for Firefox Remote Debugging Protocol (RDP)",
+  "license": "MPL-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE.md",
+    "scripts",
+    "examples"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "format:docs": "prettier README.md 'docs/**/*.md' --write",
+    "format:js": "prettier 'scripts/**/*.mjs' 'examples/**/*.mjs' --write",
+    "format:ts": "prettier 'src/**/*.ts' 'tests/**/*.ts' 'docs/snippets/**/*.ts' --write",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "npm run build && tsc -p tsconfig.test.json && node --test .test-dist/tests/*.test.js tests/*.test.mjs",
+    "pack:check": "npm pack --dry-run",
+    "prepack": "npm run build",
+    "generate:specs": "node scripts/generate-specs.mjs",
+    "test:live": "node examples/smoke.mjs",
+    "sync:firefox": "node scripts/sync-firefox-specs.mjs",
+    "docs:dev": "node scripts/docs-svocs.mjs dev",
+    "docs:build": "node scripts/docs-svocs.mjs build",
+    "docs:preview": "node scripts/docs-svocs.mjs preview",
+    "docs:check": "tsc -p tsconfig.docs.json && node scripts/docs-svocs.mjs check",
+    "verify": "npm run format:check && npm run lint && npm test && npm run docs:check",
+    "docs:setup": "node scripts/docs-svocs.mjs setup",
+    "docs:prepare": "node scripts/docs-svocs.mjs prepare"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.0.0",
+    "eslint": "^10.8.0",
+    "eslint-plugin-jsdoc": "^63.3.2",
+    "prettier": "^3.9.6",
+    "typedoc": "^0.28.0",
+    "typedoc-plugin-markdown": "^4.6.0",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.65.0"
+  }
+}

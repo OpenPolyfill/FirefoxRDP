@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.test-dist/
+website/
+src/generated/
+docs/content/api/reference/
+package-lock.json
+*.map
+*.tgz

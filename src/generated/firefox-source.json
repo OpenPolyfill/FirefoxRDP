@@ -1,0 +1,7 @@
+{
+  "repo": "mozilla-firefox/firefox",
+  "ref": "main",
+  "revision": "286c182fc6bcb1fb873d5684519e7e4e3e542c8e",
+  "directory": "devtools/shared/specs",
+  "files": 62
+}

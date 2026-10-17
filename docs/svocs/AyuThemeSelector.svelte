@@ -1,35 +1,61 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+	import { onMount } from 'svelte';
 
-  type AyuTheme = 'ayu-light' | 'ayu-dark' | 'ayu-mirage' | 'ayu-evolve';
-  const options: { id: AyuTheme; label: string }[] = [
-    { id: 'ayu-light', label: 'Ayu Light' },
-    { id: 'ayu-dark', label: 'Ayu Dark' },
-    { id: 'ayu-mirage', label: 'Ayu Mirage' },
-    { id: 'ayu-evolve', label: 'Ayu Evolve' }
-  ];
-  let theme = $state<AyuTheme>('ayu-dark');
+	type AyuTheme = 'ayu-light' | 'ayu-dark' | 'ayu-mirage' | 'ayu-evolve';
+	type ThemeSelection = 'auto' | AyuTheme;
 
-  onMount(() => {
-    const initial = document.documentElement.dataset.ayu;
-    if (options.some((option) => option.id === initial)) {
-      theme = initial as AyuTheme;
-    }
-  });
+	const options: { id: ThemeSelection; label: string }[] = [
+		{ id: 'auto', label: 'Auto / System' },
+		{ id: 'ayu-light', label: 'Ayu Light' },
+		{ id: 'ayu-dark', label: 'Ayu Dark' },
+		{ id: 'ayu-mirage', label: 'Ayu Mirage' },
+		{ id: 'ayu-evolve', label: 'Ayu Evolve' }
+	];
+	let theme = $state<ThemeSelection>('auto');
 
-  function changeTheme(event: Event) {
-    const next = (event.currentTarget as HTMLSelectElement).value as AyuTheme;
-    if (!options.some((option) => option.id === next)) return;
-    theme = next;
-    const mode = next === 'ayu-light' ? 'light' : 'dark';
-    const html = document.documentElement;
-    html.dataset.ayu = next;
-    html.dataset.theme = mode;
-    try {
-      localStorage.setItem('openpolyfill-ayu-theme', next);
-      localStorage.setItem('svocs-theme', mode);
-    } catch { /* Storage can be disabled */ }
-  }
+	function resolvedTheme(selection: ThemeSelection): AyuTheme {
+		if (selection !== 'auto') return selection;
+		return window.matchMedia('(prefers-color-scheme: light)').matches ? 'ayu-light' : 'ayu-dark';
+	}
+
+	function applyTheme(next: ThemeSelection, persist = true) {
+		theme = next;
+		const resolved = resolvedTheme(next);
+		const html = document.documentElement;
+		html.dataset.ayu = resolved;
+		html.dataset.theme = resolved === 'ayu-light' ? 'light' : 'dark';
+		html.dataset.themePreference = next;
+		if (!persist) return;
+		try {
+			localStorage.setItem('openpolyfill-ayu-theme', next);
+			if (next === 'auto') {
+				localStorage.removeItem('svocs-theme');
+			} else {
+				localStorage.setItem('svocs-theme', html.dataset.theme);
+			}
+		} catch {
+			/* Storage can be disabled */
+		}
+	}
+
+	onMount(() => {
+		const initial = document.documentElement.dataset.themePreference;
+		if (options.some((option) => option.id === initial)) {
+			theme = initial as ThemeSelection;
+		}
+		const media = window.matchMedia('(prefers-color-scheme: light)');
+		const updateSystemTheme = () => {
+			if (theme === 'auto') applyTheme('auto', false);
+		};
+		media.addEventListener('change', updateSystemTheme);
+		return () => media.removeEventListener('change', updateSystemTheme);
+	});
+
+	function changeTheme(event: Event) {
+		const next = (event.currentTarget as HTMLSelectElement).value as ThemeSelection;
+		if (!options.some((option) => option.id === next)) return;
+		applyTheme(next);
+	}
 </script>
 
 <label class="theme-picker">

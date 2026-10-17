@@ -197,7 +197,27 @@ async function patchTemplate() {
     .replace('<ThemeToggle />', '<AyuThemeSelector />')
   if (!changed.includes("import '../ayu.css';")) throw Error('Theme CSS import was not installed')
   await writeFile(layoutFile, changed)
-  const newScript = `<script>\n      (function () {\n        var options = ['ayu-light', 'ayu-dark', 'ayu-mirage', 'ayu-evolve'];\n        var selected = 'ayu-dark';\n        try {\n          var saved = localStorage.getItem('openpolyfill-ayu-theme');\n          if (options.includes(saved)) selected = saved;\n          else if (localStorage.getItem('svocs-theme') === 'light' ||\n                   window.matchMedia('(prefers-color-scheme: light)').matches) selected = 'ayu-light';\n        } catch (e) { /* storage may be disabled */ }\n        document.documentElement.dataset.ayu = selected;\n        document.documentElement.dataset.theme = selected === 'ayu-light' ? 'light' : 'dark';\n      })();\n    </script>`
+  const newScript = `<script>
+      (function () {
+        var options = ['auto', 'ayu-light', 'ayu-dark', 'ayu-mirage', 'ayu-evolve'];
+        var preference = 'auto';
+        try {
+          var saved = localStorage.getItem('openpolyfill-ayu-theme');
+          if (options.includes(saved)) preference = saved;
+          else if (localStorage.getItem('svocs-theme') === 'light') preference = 'ayu-light';
+          else if (localStorage.getItem('svocs-theme') === 'dark') preference = 'ayu-dark';
+        } catch (e) { /* storage may be disabled */ }
+        var selected = preference;
+        if (preference === 'auto') {
+          selected = window.matchMedia('(prefers-color-scheme: light)').matches
+            ? 'ayu-light'
+            : 'ayu-dark';
+        }
+        document.documentElement.dataset.ayu = selected;
+        document.documentElement.dataset.theme = selected === 'ayu-light' ? 'light' : 'dark';
+        document.documentElement.dataset.themePreference = preference;
+      })();
+    </script>`
   // Only replace the inline script which initializes svocs-theme; preserve other scripts.
   const htmlNew = html.replace(
     /<script>\s*\(function \(\) \{[\s\S]*?\}\)\(\);\s*<\/script>/,

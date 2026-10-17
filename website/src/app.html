@@ -47,16 +47,23 @@
 		</style>
 		<script>
       (function () {
-        var options = ['ayu-light', 'ayu-dark', 'ayu-mirage', 'ayu-evolve'];
-        var selected = 'ayu-dark';
+        var options = ['auto', 'ayu-light', 'ayu-dark', 'ayu-mirage', 'ayu-evolve'];
+        var preference = 'auto';
         try {
           var saved = localStorage.getItem('openpolyfill-ayu-theme');
-          if (options.includes(saved)) selected = saved;
-          else if (localStorage.getItem('svocs-theme') === 'light' ||
-                   window.matchMedia('(prefers-color-scheme: light)').matches) selected = 'ayu-light';
+          if (options.includes(saved)) preference = saved;
+          else if (localStorage.getItem('svocs-theme') === 'light') preference = 'ayu-light';
+          else if (localStorage.getItem('svocs-theme') === 'dark') preference = 'ayu-dark';
         } catch (e) { /* storage may be disabled */ }
+        var selected = preference;
+        if (preference === 'auto') {
+          selected = window.matchMedia('(prefers-color-scheme: light)').matches
+            ? 'ayu-light'
+            : 'ayu-dark';
+        }
         document.documentElement.dataset.ayu = selected;
         document.documentElement.dataset.theme = selected === 'ayu-light' ? 'light' : 'dark';
+        document.documentElement.dataset.themePreference = preference;
       })();
     </script>
 		%sveltekit.head%

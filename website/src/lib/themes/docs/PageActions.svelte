@@ -3,7 +3,9 @@
 
 	let { slug, editHref }: { slug: string; editHref?: string } = $props();
 
-	const markdownHref = $derived(resolve('/docs/[...slug].md', { slug }));
+	const markdownHref = $derived(
+		slug ? resolve('/docs/[...slug].md', { slug }) : resolve('/docs.md')
+	);
 
 	let copied = $state(false);
 	let copyTimer: ReturnType<typeof setTimeout> | undefined;

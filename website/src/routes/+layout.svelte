@@ -49,7 +49,7 @@
 	<!-- The same on every page, so kept out of the search index. -->
 	<header data-pagefind-ignore>
 		<div class="topbar">
-			<a class="brand" href={resolve('/')}>
+			<a class="brand" href={resolve('/docs')}>
 				{SITE_NAME}
 			</a>
 

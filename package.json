@@ -1,6 +1,6 @@
 {
   "name": "@openpolyfill/firefox-rdp",
-  "version": "0.5.2",
+  "version": "0.1.0",
   "private": false,
   "description": "TypeScript client for Firefox Remote Debugging Protocol (RDP)",
   "license": "MPL-2.0",

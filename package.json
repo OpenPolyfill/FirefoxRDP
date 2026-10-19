@@ -13,7 +13,7 @@
   },
   "homepage": "https://openpolyfill.github.io/firefox-rdp/",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "type": "module",
   "engines": {

@@ -23,18 +23,9 @@ The package combines a small runtime client with bindings generated from Firefox
 
 ## Installation
 
-The package is published to GitHub Packages:
-
 ```sh
-cat > .npmrc <<'EOF'
-@openpolyfill:registry=https://npm.pkg.github.com
-EOF
-
-npm login --scope=@openpolyfill --auth-type=legacy --registry=https://npm.pkg.github.com
 npm install @openpolyfill/firefox-rdp
 ```
-
-Use a GitHub personal access token (classic) with `read:packages` when `npm login` asks for the password. Do not commit credentials or a token-bearing `.npmrc`. In CI, provide `NODE_AUTH_TOKEN` through the runner's secret store.
 
 Requirements:
 
@@ -167,14 +158,7 @@ Use `npm run format` to apply Prettier formatting. `npm run verify` runs formatt
 
 ## Publishing
 
-The `publish-package` workflow publishes to GitHub Packages when a `v*.*.*` tag is pushed:
-
-```sh
-git tag v0.5.2
-git push origin v0.5.2
-```
-
-The repository's `GITHUB_TOKEN` supplies the `packages:write` permission; no npm token is stored in the repository.
+The `publish-package` workflow publishes to npmjs using npm trusted publishing (GitHub Actions OIDC) and to GitHub Packages independently. After updating the package version, push a matching `v*.*.*` tag. The npmjs package must be configured to trust this repository and workflow in npm's package settings.
 
 ## License
 

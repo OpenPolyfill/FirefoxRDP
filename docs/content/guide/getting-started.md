@@ -3,15 +3,11 @@ title: 'Getting started'
 description: 'Firefox Remote Debugging Protocol TypeScript SDK documentation'
 ---
 
-Install the package from GitHub Packages:
+Install the package from npmjs:
 
 ```sh
-printf '%s\n' '@openpolyfill:registry=https://npm.pkg.github.com' >> .npmrc
-npm login --scope=@openpolyfill --auth-type=legacy --registry=https://npm.pkg.github.com
 npm install @openpolyfill/firefox-rdp
 ```
-
-Use a GitHub personal access token (classic) with `read:packages` as the npm password. Keep `.npmrc` credentials out of version control.
 
 Start a separate Firefox profile with remote debugging enabled:
 
